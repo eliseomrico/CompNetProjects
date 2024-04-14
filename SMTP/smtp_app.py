@@ -3,6 +3,15 @@ import ssl
 import base64
 import sys
 
+########################################
+#            CONFIGURE ME
+########################################
+server_address = "smtp.gmail.com"      
+server_port = 587                      
+sender_email = ""   
+sender_password = ""
+########################################
+
 
 def get_server_response(error_code,clientSocket):
     recv = clientSocket.recv(1024).decode()
@@ -14,16 +23,32 @@ def get_server_response(error_code,clientSocket):
     print(f'Server responded successfully: {recv}')
 def close_server_connection(clientSocket):
     clientSocket.sendall('QUIT\r\n'.encode())
-    get_server_response(221,clientSocket)
     clientSocket.close()
+
 
 def main():
 
-    server_address = "smtp.gmail.com"
-    sender_email="eliseomrico@gmail.com"
-    sender_password = "czzx fmuv prrd smvb"
-    server_port = 587
+    print("\nSMTP Program")
+    print("============\n")
 
+    # Enter recipient's email address
+    print("Enter the recipient's address:", end=" ")
+    recip_address = input()
+
+    # Enter email subject
+    print("Enter the subject of the email:", end=" ")
+    subject = input()
+
+    # Enter message body
+    print("\nEnter the message body:", end=" ")
+    body = input()
+
+
+    if recip_address == "" or subject =="" or body =="":
+        print("\nOne of the above fields was not provided.\nPlease rerun the program and try again.\n")
+        sys.exit()
+
+    print("\n")
 
     # Declare and initalize client socket
     clientSocket = socket(AF_INET,SOCK_STREAM)
@@ -65,12 +90,12 @@ def main():
   
 
     # Send Mail From Command
-    clientSocket.sendall(('MAIL FROM: <eliseomrico@gmail.com>\r\n').encode())
+    clientSocket.sendall((f'MAIL FROM: <{sender_email}>\r\n').encode())
     get_server_response(250,clientSocket)
 
 
     # Send Recepient to command
-    clientSocket.sendall(('RCPT TO: <personal.mr4@gmail.com>\r\n').encode())
+    clientSocket.sendall((f'RCPT TO: <{recip_address}>\r\n').encode())
     get_server_response(250,clientSocket)
 
 
@@ -80,17 +105,17 @@ def main():
 
 
     # Subject
-    clientSocket.sendall(('Subject: Testing\r\n').encode())
+    clientSocket.sendall((f'Subject: {subject}\r\n').encode())
 
 
     # Body
-    clientSocket.sendall(('\r\nThis is the body of the test email\r\n.\r\n').encode())
+    clientSocket.sendall((f'\r\n{body}\r\n.\r\n').encode())
     print("Body finished")
 
 
     # End Message
     clientSocket.sendall(('\r\n.\r\n').encode())
-    print("Message Ended")
+    print("Message Ended\n")
 
     # close_server_connection
     close_server_connection(clientSocket)
