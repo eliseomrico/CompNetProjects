@@ -3,12 +3,13 @@ import ssl
 import base64
 import sys
 
+
 ########################################
 #            CONFIGURE ME
 ########################################
-server_address = "smtp.gmail.com"      
-server_port = 587                      
-sender_email = ""   
+server_address = "smtp.gmail.com"
+server_port = 587
+sender_email = ""
 sender_password = ""
 ########################################
 
@@ -24,9 +25,16 @@ def get_server_response(error_code,clientSocket):
 def close_server_connection(clientSocket):
     clientSocket.sendall('QUIT\r\n'.encode())
     clientSocket.close()
+def confirm_configure_me_info():
+    if server_address == "" or server_port == "" or sender_email == "" or sender_password == "":
+        print("\nERROR: Make sure to set the CONFIGURE ME info located\ninside the smtp_app.py file before running the program.\n")
+        sys.exit()
 
 
 def main():
+
+
+    confirm_configure_me_info()
 
     print("\nSMTP Program")
     print("============\n")
@@ -119,6 +127,7 @@ def main():
 
     # close_server_connection
     close_server_connection(clientSocket)
+
 
 if __name__=='__main__':
     main()
