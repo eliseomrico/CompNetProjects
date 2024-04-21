@@ -8,7 +8,6 @@ import binascii
 
 ICMP_ECHO_REQUEST = 8
 
-
 def checksum(string):
 
     csum = 0
@@ -35,6 +34,8 @@ def checksum(string):
     return answer
 
 def receiveOnePing(mySocket, ID, timeout, destAddr):
+    # Remove Me
+    global packageRev,timeRTT
     
     timeLeft = timeout
 
@@ -52,7 +53,6 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         # ========================================
         #Fill in start
-        #Fetch the ICMP header from the IP packet
         #Fill in end
         # ========================================
 
@@ -120,4 +120,11 @@ def ping(host, timeout=1):
 
     return delay
 
-ping(sys.argv[1])
+def main():
+    
+    print("\nEnter hostname: ")
+    hostname = input()
+    ping(hostname)
+
+if __name__ == '__main__':
+    main()
