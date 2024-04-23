@@ -9,8 +9,8 @@ import sys
 ########################################
 server_address = "smtp.gmail.com"
 server_port = 587
-sender_email = ""
-sender_password = ""
+sender_email = "laesco4@gmail.com"
+sender_password = "yyag arpy rzca wbeu"
 ########################################
 
 
@@ -68,13 +68,13 @@ def main():
     tlsComman = 'HELO Alice\r\n'
     clientSocket.sendall(tlsComman.encode ())
     get_server_response(250,clientSocket)
-    
+
 
     # # TSL handshake
     tlsComman = 'STARTTLS \r\n'
     clientSocket.sendall(tlsComman.encode())
     get_server_response(220,clientSocket)
-    
+
 
     # Wrap client socket for TLS
     context = ssl.create_default_context()
@@ -95,7 +95,7 @@ def main():
     clientSocket.send(f'{encoded_password}\r\n'.encode())
     response = clientSocket.recv(1024).decode()
     print(response)
-  
+
 
     # Send Mail From Command
     clientSocket.sendall((f'MAIL FROM: <{sender_email}>\r\n').encode())
@@ -109,7 +109,7 @@ def main():
 
     # Send DATA
     clientSocket.send(('DATA\r\n').encode())
-    get_server_response(354,clientSocket) 
+    get_server_response(354,clientSocket)
 
 
     # Subject
