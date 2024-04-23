@@ -5,9 +5,7 @@
 # Author: Gabriel SB Fernandez
 # Created: 4/01/2024
 #——————————————————————————-
-# Much of the server recieved from Stackoverflow on 2/13/13
 # UDPPingerClient.py
-# We will need the following module to generate randomized lost packets import random
 import socket
 import time # Import time library
 
