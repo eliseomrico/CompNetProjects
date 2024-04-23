@@ -8,10 +8,12 @@
 
 A UDP Pinger using Python where packet drop rate is simulated to be 30% and client can ping server. The client asks the user to run ping or end program. Once the ping is started it sends 10 pings. The server will randomly capitalize the encapsulated data and send it back to the client.
 
+First open CMD terminal and set PATH to correct folder.
 To run the server: python UDPPingerServer.py
 Example server output: 
 	UDP Server Started IP Address: 127.0.01 and Port: 12000
 
+Open a second CMD terminal and set PATH to correct folder:
 to run the client: python UDPPingerClient.py
 Example client output:
 
