@@ -1,11 +1,10 @@
 #——————————————————————————-
-# Name: UDPPingerServer.py
+# Name: UDPPingerClient.py
 # Purpose:Lab 2: UDP Pinger
 # For: Computer Networks
 # Author: Gabriel SB Fernandez
 # Created: 4/01/2024
 #——————————————————————————-
-# UDPPingerClient.py
 import socket
 import time # Import time library
 
