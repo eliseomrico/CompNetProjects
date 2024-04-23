@@ -7,29 +7,32 @@ import select
 import binascii
 
 ICMP_ECHO_REQUEST = 8
+debug = 0
 
-def checksum(string):
+def checksum(data):
 
     csum = 0
-    countTo = (len(string) // 2) * 2
+    countTo = (len(data) // 2) * 2
     count = 0
 
     while count < countTo:
-        thisVal = ord(string[count+1]) * 256 + ord(string[count])
+        thisVal = data[count+1] * 256 + data[count]
         csum = csum + thisVal
         csum = csum & 0xffffffff
         count = count + 2
 
-    if countTo < len(string):
-        csum = csum + ord(string[len(string) - 1]) 
+    if countTo < len(data):
+        csum = csum + data[len(data) - 1] 
         csum = csum & 0xffffffff
 
-    
     csum = (csum >> 16) + (csum & 0xffff)
     csum = csum + (csum >> 16)
     answer = ~csum
     answer = answer & 0xffff
     answer = answer >> 8 | (answer << 8 & 0xff00)
+
+    if debug:
+        print("Checksum: ".format(hex(answer)))
 
     return answer
 
@@ -43,6 +46,8 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         whatReady = select.select([mySocket], [], [], timeLeft)
         howLongInSelect = (time.time() - startedSelect)
 
+        print("Duration between send and receive: {}".format(howLongInSelect))
+
         if whatReady[0] == []:
             return "Request timed out."
         
@@ -51,14 +56,37 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         # ========================================
         #Fill in start
+
+        # Destination Address
+        ttl = recPacket[8]
+        code = recPacket[21]
+        source_address = struct.unpack("BBBB", recPacket[12:16])
+        destination_address = struct.unpack("BBBB",recPacket[16:20])
+    
+
+        print("Source IP: {}.{}.{}.{}".format(source_address[0],source_address[1],source_address[2],source_address[3]))
+        print("Dest IP: {}.{}.{}.{}".format(destination_address[0],destination_address[1],destination_address[2],destination_address[3]))
+        print("TTL: {}".format(ttl))
+        print("Code {}".format(code))
+        print()
+
+        if debug:
+            idx = 0
+            for item in recPacket:
+                print("{} : {}".format(idx,hex(item)))
+                idx+=1
+
         #Fill in end
         # ========================================
+
+        return ""
 
         timeLeft = timeLeft - howLongInSelect
         if timeLeft <= 0:
             return "Request timed out."
         
 def sendOnePing(mySocket, destAddr, ID):
+
     # Header is type (8), code (8), checksum (16), id (16), sequence (16)
     myChecksum = 0
     
@@ -68,7 +96,7 @@ def sendOnePing(mySocket, destAddr, ID):
     data = struct.pack("d", time.time())
 
     # Calculate the checksum on the data and the dummy header.
-    myChecksum = checksum(str(header + data))
+    myChecksum = checksum(header+data)
 
     # Get the right checksum, and put in the header
     if sys.platform == 'darwin':
