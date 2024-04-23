@@ -10,7 +10,7 @@ tcpSerSock = socket(AF_INET, SOCK_STREAM)
 tcpSerSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
 serverIP = sys.argv[1]
-welcomePort = 5005
+welcomePort = 5006
 
 tcpSerSock.bind((serverIP, welcomePort))
 tcpSerSock.listen(10)
@@ -19,9 +19,10 @@ while 1:
     # Start receiving data from the client
     print('Ready to serve...')
     tcpCliSock, addr = tcpSerSock.accept()
-    print('Received a connection from:', addr)
+    print('Received a connection from:\n', addr)
     message = tcpCliSock.recv(1024).decode()
-    print(message)
+    print('Received request from client:\n')
+    print(f"{message}\n")
 
     # Extract the filename from the given message
     print(message.split()[1])
@@ -38,6 +39,7 @@ while 1:
         fileExist = "true"
 
         # ProxyServer finds a cache hit and generates a response message
+        print('Sending cached file:\n', filename)
         tcpCliSock.send("HTTP/1.0 200 OK\r\n".encode())
         tcpCliSock.send("Content-Type:text/html\r\n".encode())
 
